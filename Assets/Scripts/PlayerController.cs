@@ -4,7 +4,15 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Player stuff")]
     [SerializeField] private float _speed01;
+    [SerializeField] private GameObject _weaponPosition;
+    [Header("Weapon stuff")]
+    [SerializeField] private GameObject _bulletPreFab;
+    [SerializeField] private GameObject _bulletStorage;
+    [SerializeField] private float _cooldownTimer;
+    private bool _canFire = true;
+
 
     // Start is called before the first frame update
     void Start()
@@ -16,7 +24,21 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         Movement();
-               
+        FireWeapon();        
+    }
+
+    private void FireWeapon()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (_canFire == true)
+            {
+                GameObject bullet = Instantiate(_bulletPreFab, _weaponPosition.transform.position, Quaternion.identity);
+                bullet.transform.parent = _bulletStorage.transform;
+                _canFire = false;
+                StartCoroutine("CooldownTimer");
+            }
+        }
     }
 
     public void Movement()
@@ -28,27 +50,15 @@ public class PlayerController : MonoBehaviour
         transform.Translate(new Vector3(horizontal, vertical, 0)
             * Time.deltaTime * _speed01);
 
-        //Debug.Log(currentPosition);
+        float clampX = Mathf.Clamp(transform.position.x, -9.5f, 9.5f);
+        float clampY = Mathf.Clamp(transform.position.y, -5, 3);
 
-        if (currentPosition.x > 9.5f)
-        {
-            currentPosition.x = 9.5f;
-            transform.position = currentPosition;
-        }
-        if (currentPosition.x < -9.5f)
-        {
-            currentPosition.x = -9.5f;
-            transform.position = currentPosition;
-        }
-        if (currentPosition.y > 3)
-        {
-            currentPosition.y = 3;
-            transform.position = currentPosition;
-        }
-        if (currentPosition.y < -5)
-        {
-            currentPosition.y = -5;
-            transform.position = currentPosition;
-        }
+        transform.position = new Vector3(clampX, clampY, 0);        
+    }
+
+    IEnumerator CooldownTimer()
+    {
+        yield return new WaitForSeconds(_cooldownTimer);
+        _canFire = true;
     }
 }
