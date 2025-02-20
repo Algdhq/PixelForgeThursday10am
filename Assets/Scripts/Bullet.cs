@@ -6,6 +6,7 @@ public class Bullet : MonoBehaviour
 {
     [SerializeField] private float _bulletSpeed;
     [SerializeField] private float _deathTimer;
+    [SerializeField] private int _bulletDamage;
 
 
     // Start is called before the first frame update
@@ -21,7 +22,14 @@ public class Bullet : MonoBehaviour
         transform.Translate(Vector3.up * Time.deltaTime * _bulletSpeed);
     }
 
-
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Enemy"))
+        {
+            other.GetComponent<Enemy01>().takeDamage(_bulletDamage);
+            Destroy(this.gameObject);
+        }
+    }
 
     void KillMe()
     {

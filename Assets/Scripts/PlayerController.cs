@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject _weaponPosition;
     [Header("Weapon stuff")]
     [SerializeField] private GameObject _bulletPreFab;
+    [SerializeField] private GameObject _bomb;
     [SerializeField] private GameObject _bulletStorage;
     [SerializeField] private float _cooldownTimer;
     private bool _canFire = true;
@@ -24,7 +25,8 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         Movement();
-        FireWeapon();        
+        FireWeapon();
+        LaunchBomb();
     }
 
     private void FireWeapon()
@@ -41,6 +43,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void LaunchBomb()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            GameObject bomb = Instantiate(_bomb, _weaponPosition.transform.position, Quaternion.identity);
+            bomb.transform.parent = _bulletStorage.transform;
+        }
+    }
+
     public void Movement()
     {
         float horizontal = Input.GetAxis("Horizontal");
@@ -53,8 +64,11 @@ public class PlayerController : MonoBehaviour
         float clampX = Mathf.Clamp(transform.position.x, -9.5f, 9.5f);
         float clampY = Mathf.Clamp(transform.position.y, -5, 3);
 
-        transform.position = new Vector3(clampX, clampY, 0);        
+        transform.position = new Vector3(clampX, clampY, 0);
+
     }
+
+    
 
     IEnumerator CooldownTimer()
     {

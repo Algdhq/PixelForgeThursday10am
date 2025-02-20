@@ -113,3 +113,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bulletSpeed: 15
   _deathTimer: 2
+  _bulletDamage: 10
