@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    [Header("What Type of bullet is this?")]
+    [SerializeField] private bool _harmEnemyBullet;
+
+    [Header("BulletInfo")]
     [SerializeField] private float _bulletSpeed;
     [SerializeField] private float _deathTimer;
     [SerializeField] private int _bulletDamage;
@@ -24,11 +28,24 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy"))
+        if(_harmEnemyBullet == true)
         {
-            other.GetComponent<Enemy01>().takeDamage(_bulletDamage);
-            Destroy(this.gameObject);
+            if (other.CompareTag("Enemy"))
+            {
+                other.GetComponent<Enemy01>().takeDamage(_bulletDamage);
+                Destroy(this.gameObject);
+            }
         }
+
+        if (_harmEnemyBullet == false)
+        {
+            if (other.CompareTag("Player"))
+            {
+                other.GetComponent<PlayerController>().TakeDamage(_bulletDamage);
+                Destroy(this.gameObject);
+            }
+        }
+
     }
 
     void KillMe()

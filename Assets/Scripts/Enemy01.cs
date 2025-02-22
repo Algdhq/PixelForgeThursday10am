@@ -8,12 +8,20 @@ public class Enemy01 : MonoBehaviour
     [SerializeField] private Material[] _material;
     [SerializeField] private ParticleSystem _explosion;
     [SerializeField] private GameObject _enemyModel;
+    [SerializeField] private GameObject _enemyBullet;
+    [SerializeField] private GameObject _weaponPosition;
+    [SerializeField] private GameObject _bulletStorage;
+
+    private bool _shootInLoop = true;
+    private BoxCollider _collider;
 
     private Renderer _objectRenderer;
     // Start is called before the first frame update
     void Start()
     {
-        _objectRenderer = transform.Find("SpaceFighter27").GetComponent<Renderer>();        
+        _objectRenderer = transform.Find("SpaceFighter27").GetComponent<Renderer>();
+        _collider = GetComponent<BoxCollider>();
+        StartCoroutine("ShootBulletsLoop");
     }
 
     // Update is called once per frame
@@ -31,16 +39,29 @@ public class Enemy01 : MonoBehaviour
         {
             DestroyEnemy();
         }
-        //put damage incoming as a value
-        //subtract health
-        //tell me how much health is left
-        //do damage stuff so I know I got damaged
     }
 
     public void DestroyEnemy()
     {
         _explosion.Play();
         _enemyModel.GetComponent<MeshRenderer>().enabled = false;
+        _collider.enabled = false;
+        Invoke("RemoveEnemyFromScene", 2f);
+    }
+
+    public void RemoveEnemyFromScene()
+    {
+        Destroy(this.gameObject);
+    }
+
+    IEnumerator ShootBulletsLoop()
+    {
+        while(_shootInLoop == true)
+        {
+            GameObject bullet = Instantiate(_enemyBullet, _weaponPosition.transform.position, _weaponPosition.transform.rotation);
+            bullet.transform.parent = _bulletStorage.transform;
+            yield return new WaitForSeconds(2.0f);
+        }        
     }
 
     IEnumerator DamageBlink()

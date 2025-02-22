@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Health Info")]
+    [SerializeField] private int _health;
+    [SerializeField] private Material[] _material;
     [Header("Player stuff")]
     [SerializeField] private float _speed01;
     [SerializeField] private GameObject _weaponPosition;
@@ -12,13 +15,21 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject _bomb;
     [SerializeField] private GameObject _bulletStorage;
     [SerializeField] private float _cooldownTimer;
-    private bool _canFire = true;
+    [Header("Death stuff")]
+    [SerializeField] private ParticleSystem _explosion;
+    [SerializeField] private GameObject _playerModel;
 
+    private bool _canFire = true;
+    private Renderer _objectRenderer;
+    private BoxCollider _collider;
+
+    
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        _objectRenderer = transform.Find("Space_Fighter_06").GetComponent<Renderer>();
+        _collider = GetComponent<BoxCollider>();        
     }
 
     // Update is called once per frame
@@ -67,12 +78,42 @@ public class PlayerController : MonoBehaviour
         transform.position = new Vector3(clampX, clampY, 0);
 
     }
-
     
+    public void TakeDamage(int value)
+    {
+        Debug.Log("take damage value is " + value);
+        _health -= value;
+        StartCoroutine("DamageBlink");
+
+        if (_health <= 0)
+        {
+            DestroyPlayer();
+        }
+    }
+
+    public void DestroyPlayer()
+    {
+        _explosion.Play();
+        _playerModel.GetComponent<MeshRenderer>().enabled = false;
+        _collider.enabled = false;        
+    }
 
     IEnumerator CooldownTimer()
     {
         yield return new WaitForSeconds(_cooldownTimer);
         _canFire = true;
+    }
+
+    IEnumerator DamageBlink()
+    {
+        int count = 0;
+        while (count < 3)
+        {
+            _objectRenderer.material = _material[1];
+            count++;
+            yield return new WaitForSeconds(0.02f);
+            _objectRenderer.material = _material[0];
+            yield return new WaitForSeconds(0.02f);
+        }
     }
 }
