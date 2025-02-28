@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     private bool _canFire = true;
     private Renderer _objectRenderer;
     private BoxCollider _collider;
+    private bool _isDead;
 
     
 
@@ -35,9 +36,12 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Movement();
-        FireWeapon();
-        LaunchBomb();
+        if(_isDead == false)
+        {
+            Movement();
+            FireWeapon();
+            LaunchBomb();
+        }        
     }
 
     private void FireWeapon()
@@ -46,7 +50,7 @@ public class PlayerController : MonoBehaviour
         {
             if (_canFire == true)
             {
-                GameObject bullet = Instantiate(_bulletPreFab, _weaponPosition.transform.position, Quaternion.identity);
+                GameObject bullet = Instantiate(_bulletPreFab, _weaponPosition.transform.position, _weaponPosition.transform.rotation);
                 bullet.transform.parent = _bulletStorage.transform;
                 _canFire = false;
                 StartCoroutine("CooldownTimer");
@@ -95,8 +99,11 @@ public class PlayerController : MonoBehaviour
     {
         _explosion.Play();
         _playerModel.GetComponent<MeshRenderer>().enabled = false;
-        _collider.enabled = false;        
+        _collider.enabled = false;
+        _isDead = true;
     }
+
+    //revive player
 
     IEnumerator CooldownTimer()
     {

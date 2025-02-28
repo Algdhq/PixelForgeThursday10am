@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 2933734763596566943}
   - component: {fileID: 2933734763596566942}
   - component: {fileID: 2933734763596566931}
+  - component: {fileID: 684082616}
   m_Layer: 0
   m_Name: Enemy01
   m_TagString: Enemy
@@ -146,6 +147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _health: 30
+  _enemyPattern: 2
   _material:
   - {fileID: 2100000, guid: 02b80797477dbe04fa3d45f3e3214e9b, type: 2}
   - {fileID: 2100000, guid: 85f489bf654008749825bdf1eeefa503, type: 2}
@@ -170,6 +172,27 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!95 &684082616
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2933734763596566941}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d68c0b558845cde498b8b8a439ff55c0, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &2933734763752112574
 PrefabInstance:
   m_ObjectHideFlags: 0
